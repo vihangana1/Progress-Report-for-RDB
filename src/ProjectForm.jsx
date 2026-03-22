@@ -54,6 +54,23 @@ const ProjectForm = () => {
 
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxL0bHsfrslXj2d_YzyUObhM-uJJac76RBwJr-_cQiyoy0Ve8d7NdDtbeFbVNa1T3X30w/exec'
   
+  // Check if form is complete
+  const isFormComplete = () => {
+    // Check main fields
+    if (!formData.district || !formData.dn || !formData.gn || !formData.file) {
+      return false;
+    }
+    
+    // Check all projects have required fields
+    for (const project of projects) {
+      if (!project.proposal || !project.estimatedCost) {
+        return false;
+      }
+    }
+    
+    return true;
+  }
+  
   // District options
   const districts = [
     { value: '', label: '-- දිස්ත්‍රික්කය තෝරන්න / Select District --' },
@@ -89,30 +106,27 @@ const ProjectForm = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // UPDATED: Logic to check for only Images and PDFs
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // 1. Check File Size (10MB)
       if (file.size > 10 * 1024 * 1024) {
         setMessage({ type: 'error', text: 'ගොනුව 10MB ට වඩා කුඩා විය යුතුය' });
-        e.target.value = ''; // Reset input
+        e.target.value = '';
         return;
       }
 
-      // 2. Check File Type (PDF or Images)
       const isPdf = file.type === 'application/pdf';
       const isImage = file.type.startsWith('image/');
 
       if (!isPdf && !isImage) {
         setMessage({ type: 'error', text: 'කරුණාකර PDF හෝ පින්තූරයක් (Image) පමණක් තෝරන්න' });
-        e.target.value = ''; // Reset input
+        e.target.value = '';
         setFormData(prev => ({ ...prev, file: null }));
         return;
       }
 
       setFormData(prev => ({ ...prev, file }));
-      setMessage({ type: '', text: '' }); // Clear any previous error
+      setMessage({ type: '', text: '' });
     }
   };
 
@@ -245,6 +259,10 @@ const ProjectForm = () => {
         name: '',
         institution: ''
       }]);
+      
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
 
     } catch (error) {
       console.error('Error:', error);
@@ -322,8 +340,7 @@ const ProjectForm = () => {
                 />
               </div>
             </div>
-            <br />
-            <br />
+          </div>
 
           {/* Projects Section */}
           <div style={styles.projectsSection}>
@@ -337,7 +354,7 @@ const ProjectForm = () => {
                 style={styles.addProjectBtn}
               >
                 <Plus style={styles.iconSmall} />
-                ව්‍යාපෘතිය එක් කරන්න
+                <span style={styles.btnText}>ව්‍යාපෘතිය එක් කරන්න</span>
               </button>
             </div>
 
@@ -354,13 +371,13 @@ const ProjectForm = () => {
                       style={styles.removeProjectBtn}
                     >
                       <Trash2 style={styles.iconSmall} />
-                      ඉවත් කරන්න
+                      <span>ඉවත් කරන්න</span>
                     </button>
                   )}
                 </div>
 
                 <div style={styles.gridTwo}>
-                  <div style={{ ...styles.fieldGroup, gridColumn: '1 / -1' }}>
+                  <div style={styles.fieldGroupFull}>
                     <label style={styles.label}>
                       සංවර්ධන යෝජනා (ව්‍යාපෘතියේ නම) / Development Proposal *
                     </label>
@@ -375,36 +392,35 @@ const ProjectForm = () => {
 
                   <div style={styles.fieldGroup}>
                     <label style={styles.label}>
-                        අපේක්ෂිත දළ ඇස්තමේන්තුව / Estimated Cost *
+                      අපේක්ෂිත දළ ඇස්තමේන්තුව / Estimated Cost *
                     </label>
                     <input
-                        type="number"
-                        value={project.estimatedCost}
-                        onChange={(e) => handleProjectChange(project.id, 'estimatedCost', e.target.value)}
-                        style={styles.input}
-                        required
+                      type="number"
+                      value={project.estimatedCost}
+                      onChange={(e) => handleProjectChange(project.id, 'estimatedCost', e.target.value)}
+                      style={styles.input}
+                      required
                     />
-                    </div>
+                  </div>
 
-                    <div style={styles.fieldGroup}>
+                  <div style={styles.fieldGroup}>
                     <label style={styles.label}>
-                        සංවර්දන ප්‍රවේශය / Development Approach
+                      සංවර්දන ප්‍රවේශය / Development Approach
                     </label>
                     <select
-                        value={project.approach}
-                        onChange={(e) => handleProjectChange(project.id, 'approach', e.target.value)}
-                        style={styles.input}
+                      value={project.approach}
+                      onChange={(e) => handleProjectChange(project.id, 'approach', e.target.value)}
+                      style={styles.input}
                     >
-                        <option value="">-- Select --</option>
-                        <option value="සමජ පරිසර">සමජ පරිසර</option>
-                        <option value="ආහාර සුරක්ෂිතතාව">ආහාර සුරක්ෂිතතාව</option>
-                        <option value="නිශ්පාදන ආර්ථිකය">නිශ්පාදන ආර්ථිකය</option>
-                        <option value="මානව සම්පත් සංවර්දන">මානව සම්පත් සංවර්දන</option>
-                        <option value="රැකවරනය">රැකවරනය</option>
-                        <option value="සැලසුම් ජාල හා ප්‍රවේශය">සැලසුම් ජාල හා ප්‍රවේශය</option>
+                      <option value="">-- Select --</option>
+                      <option value="සමජ පරිසර">සමජ පරිසර</option>
+                      <option value="ආහාර සුරක්ෂිතතාව">ආහාර සුරක්ෂිතතාව</option>
+                      <option value="නිශ්පාදන ආර්ථිකය">නිශ්පාදන ආර්ථිකය</option>
+                      <option value="මානව සම්පත් සංවර්දන">මානව සම්පත් සංවර්දන</option>
+                      <option value="රැකවරනය">රැකවරනය</option>
+                      <option value="සැලසුම් ජාල හා ප්‍රවේශය">සැලසුම් ජාල හා ප්‍රවේශය</option>
                     </select>
-                    </div>
-
+                  </div>
 
                   <div style={styles.fieldGroup}>
                     <label style={styles.label}>
@@ -420,22 +436,20 @@ const ProjectForm = () => {
 
                   <div style={styles.fieldGroup}>
                     <label style={styles.label}>
-                        අපේක්ශිත ප්‍රතිපාදන ප්‍රභවය / Funding Source
+                      අපේක්ශිත ප්‍රතිපාදන ප්‍රභවය / Funding Source
                     </label>
                     <select
-                        value={project.fundingSource}
-                        onChange={(e) => handleProjectChange(project.id, 'fundingSource', e.target.value)}
-                        style={styles.input}
+                      value={project.fundingSource}
+                      onChange={(e) => handleProjectChange(project.id, 'fundingSource', e.target.value)}
+                      style={styles.input}
                     >
-                        <option value="">-- Select --</option>
-                        <option value="පලාත් පාලන">පලාත් පාලන</option>
-                        <option value="ප්‍රාදේශීය සභා">ප්‍රාදේශීය සභා</option>
-                        <option value="රාජ්‍ය නොවන සංවිදාන">රාජ්‍ය නොවන සංවිදාන</option>
-                        <option value="රේකීය අමාත්‍යාංශය">රේකීය අමාත්‍යාංශය</option>
+                      <option value="">-- Select --</option>
+                      <option value="පලාත් පාලන">පලාත් පාලන</option>
+                      <option value="ප්‍රාදේශීය සභා">ප්‍රාදේශීය සභා</option>
+                      <option value="රාජ්‍ය නොවන සංවිදාන">රාජ්‍ය නොවන සංවිදාන</option>
+                      <option value="රේකීය අමාත්‍යාංශය">රේකීය අමාත්‍යාංශය</option>
                     </select>
-                    </div>
-
-                  
+                  </div>
 
                   <div style={styles.fieldGroup}>
                     <label style={styles.label}>
@@ -451,7 +465,7 @@ const ProjectForm = () => {
 
                   <div style={styles.fieldGroup}>
                     <label style={styles.label}>
-                      නම (ක්‍රියාත්මක ආයතනය ) / Name
+                      නම (ක්‍රියාත්මක ආයතනය) / Name
                     </label>
                     <input
                       type="text"
@@ -460,82 +474,86 @@ const ProjectForm = () => {
                       style={styles.input}
                     />
                   </div>
-                  
                 </div>
               </div>
             ))}
           </div>
-          <br />
 
+          {/* File Upload Section */}
           <div style={styles.fileSection}>
-              <label style={styles.label}>
-                ගොනුව උඩුගත කරන්න / Upload File
+            <label style={styles.label}>
+              ගොනුව උඩුගත කරන්න / Upload File *
+            </label>
+            <div style={styles.fileInputWrapper}>
+              <label style={styles.fileLabel}>
+                <Upload style={styles.icon} />
+                <span style={styles.fileText}>
+                  {formData.file ? formData.file.name : 'ගොනුවක් තෝරන්න / Choose File'}
+                </span>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  onChange={handleFileChange}
+                  style={styles.hiddenInput}
+                  accept="image/*,application/pdf"
+                />
               </label>
-              <div style={styles.fileInputWrapper}>
-                <label style={styles.fileLabel}>
-                  <Upload style={styles.icon} />
-                  <span style={styles.fileText}>
-                    {formData.file ? formData.file.name : 'ගොනුවක් තෝරන්න'}
-                  </span>
-                  {/* UPDATED: Accept Images and PDF only */}
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    onChange={handleFileChange}
-                    style={styles.hiddenInput}
-                    accept="image/*,application/pdf"
-                  />
-                </label>
-                {formData.file && (
-                    <button
-                        type="button"
-                        onClick={() => {
-                        setFormData(prev => ({ ...prev, file: null }));
-                        if (fileInputRef.current) {
-                            fileInputRef.current.value = ""; 
-                        }
-                        }}
-                        style={styles.removeFileBtn}
-                    >
-                        ඉවත් කරන්න
-                    </button>
-                    )}
-              </div>
-              {/* UPDATED: Help text reflects images and PDF */}
-              <p style={styles.helpText}>
-                PDF or Image files (JPG, PNG) - Max 10MB
-              </p>
+              {formData.file && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFormData(prev => ({ ...prev, file: null }));
+                    if (fileInputRef.current) {
+                      fileInputRef.current.value = "";
+                    }
+                  }}
+                  style={styles.removeFileBtn}
+                >
+                  ඉවත් කරන්න
+                </button>
+              )}
             </div>
+            <p style={styles.helpText}>
+              PDF or Image files (JPG, PNG) - Max 10MB
+            </p>
           </div>
 
+          {/* Submit Button */}
           <div style={styles.submitContainer}>
             <button
               type="submit"
-              disabled={uploading}
+              disabled={uploading || !isFormComplete()}
               style={{
                 ...styles.submitBtn,
-                ...(uploading ? styles.submitBtnDisabled : {})
+                ...((uploading || !isFormComplete()) ? styles.submitBtnDisabled : {})
               }}
             >
               {uploading ? (
                 <>
                   <div style={styles.spinner}></div>
-                  ඉදිරිපත් කරමින්...
+                  <span>ඉදිරිපත් කරමින්...</span>
                 </>
               ) : (
                 <>
                   <Send style={styles.iconSmall} />
-                  ඉදිරිපත් කරන්න
+                  <span>ඉදිරිපත් කරන්න / Submit</span>
                 </>
               )}
             </button>
+            {!isFormComplete() && !uploading && (
+              <p style={styles.warningText}>
+                කරුණාකර ඉදිරිපත් කිරීමට පෙර සියලු අවශ්‍ය ක්ෂේත්‍ර (*) පුරවන්න
+                <br />
+                Please fill all required fields (*) before submitting
+              </p>
+            )}
           </div>
 
+          {/* Message Display */}
           {message.text && (
             <div style={{
               ...styles.message,
-              ...(message.type === 'success' ? styles.messageSuccess : styles.messageError),
-              marginTop: '24px'
+              ...(message.type === 'success' ? styles.messageSuccess : styles.messageError)
             }}>
               {message.text}
             </div>
@@ -550,38 +568,42 @@ const styles = {
   container: {
     minHeight: '100vh',
     background: 'linear-gradient(to bottom right, #EFF6FF, #E0E7FF)',
-    padding: '32px 16px',
+    padding: '16px',
     fontFamily: '"Noto Sans Sinhala", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
   },
   formCard: {
     maxWidth: '1200px',
     margin: '0 auto',
     backgroundColor: '#ffffff',
-    borderRadius: '8px',
-    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-    padding: '32px'
+    borderRadius: '12px',
+    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+    padding: '20px'
   },
   header: {
     borderBottom: '4px solid #4F46E5',
     paddingBottom: '16px',
-    marginBottom: '32px'
+    marginBottom: '24px'
   },
   title: {
-    fontSize: '30px',
+    fontSize: 'clamp(20px, 5vw, 30px)',
     fontWeight: 'bold',
     color: '#1F2937',
     textAlign: 'center',
-    margin: '0'
+    margin: '0',
+    lineHeight: '1.3'
   },
   subtitle: {
     color: '#6B7280',
     textAlign: 'center',
-    marginTop: '8px'
+    marginTop: '8px',
+    fontSize: 'clamp(12px, 3vw, 16px)'
   },
   message: {
     padding: '16px',
     borderRadius: '8px',
-    textAlign: 'center' 
+    textAlign: 'center',
+    marginTop: '20px',
+    fontSize: '14px'
   },
   messageSuccess: {
     backgroundColor: '#F0FDF4',
@@ -596,80 +618,94 @@ const styles = {
   mainFieldsContainer: {
     backgroundColor: '#EEF2FF',
     borderRadius: '8px',
-    padding: '24px',
-    marginBottom: '32px'
+    padding: '20px',
+    marginBottom: '24px'
   },
   sectionTitle: {
-    fontSize: '20px',
+    fontSize: 'clamp(16px, 4vw, 20px)',
     fontWeight: '600',
     color: '#312E81',
     marginBottom: '16px'
   },
   gridThree: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-    gap: '24px'
+    gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))',
+    gap: '16px'
   },
   gridTwo: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))',
     gap: '16px'
   },
   fieldGroup: {
     display: 'flex',
     flexDirection: 'column'
   },
+  fieldGroupFull: {
+    display: 'flex',
+    flexDirection: 'column',
+    gridColumn: '1 / -1'
+  },
   label: {
     display: 'block',
-    fontSize: '14px',
+    fontSize: 'clamp(13px, 3vw, 14px)',
     fontWeight: '500',
     color: '#374151',
-    marginBottom: '8px'
+    marginBottom: '6px',
+    lineHeight: '1.4'
   },
   input: {
     width: '100%',
-    padding: '10px 16px',
+    padding: '12px 14px',
     border: '1px solid #D1D5DB',
     borderRadius: '8px',
-    fontSize: '14px',
+    fontSize: '16px',
     outline: 'none',
     transition: 'all 0.2s',
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
+    WebkitAppearance: 'none',
+    appearance: 'none'
   },
   textarea: {
     width: '100%',
-    padding: '10px 16px',
+    padding: '12px 14px',
     border: '1px solid #D1D5DB',
     borderRadius: '8px',
-    fontSize: '14px',
+    fontSize: '16px',
     outline: 'none',
     resize: 'vertical',
     fontFamily: 'inherit',
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
+    minHeight: '80px'
   },
   fileSection: {
-    marginTop: '24px'
+    marginTop: '24px',
+    marginBottom: '24px'
   },
   fileInputWrapper: {
     display: 'flex',
     alignItems: 'center',
-    gap: '16px',
+    gap: '12px',
     flexWrap: 'wrap'
   },
   fileLabel: {
     display: 'flex',
     alignItems: 'center',
-    gap: '8px',
-    padding: '10px 16px',
+    gap: '10px',
+    padding: '12px 16px',
     backgroundColor: '#ffffff',
     border: '2px dashed #D1D5DB',
     borderRadius: '8px',
     cursor: 'pointer',
-    transition: 'border-color 0.2s'
+    transition: 'border-color 0.2s',
+    flexGrow: 1,
+    minWidth: '200px'
   },
   fileText: {
     fontSize: '14px',
-    color: '#6B7280'
+    color: '#6B7280',
+    wordBreak: 'break-word',
+    flex: 1
   },
   hiddenInput: {
     display: 'none'
@@ -680,15 +716,16 @@ const styles = {
     border: 'none',
     background: 'none',
     cursor: 'pointer',
-    textDecoration: 'underline'
+    textDecoration: 'underline',
+    padding: '8px'
   },
   helpText: {
     fontSize: '12px',
     color: '#6B7280',
-    marginTop: '4px'
+    marginTop: '8px'
   },
   projectsSection: {
-    marginBottom: '32px'
+    marginBottom: '24px'
   },
   projectsHeader: {
     display: 'flex',
@@ -696,10 +733,10 @@ const styles = {
     alignItems: 'center',
     marginBottom: '16px',
     flexWrap: 'wrap',
-    gap: '16px'
+    gap: '12px'
   },
   projectsTitle: {
-    fontSize: '20px',
+    fontSize: 'clamp(16px, 4vw, 20px)',
     fontWeight: '600',
     color: '#1F2937',
     margin: '0'
@@ -716,13 +753,17 @@ const styles = {
     fontSize: '14px',
     fontWeight: '500',
     cursor: 'pointer',
-    transition: 'background-color 0.2s'
+    transition: 'background-color 0.2s',
+    whiteSpace: 'nowrap'
+  },
+  btnText: {
+    display: 'inline'
   },
   projectCard: {
     backgroundColor: '#F9FAFB',
     borderLeft: '4px solid #4F46E5',
     borderRadius: '8px',
-    padding: '24px',
+    padding: '20px',
     marginBottom: '16px'
   },
   projectHeader: {
@@ -731,10 +772,10 @@ const styles = {
     alignItems: 'center',
     marginBottom: '16px',
     flexWrap: 'wrap',
-    gap: '8px'
+    gap: '12px'
   },
   projectNumber: {
-    fontSize: '18px',
+    fontSize: 'clamp(16px, 4vw, 18px)',
     fontWeight: '600',
     color: '#374151',
     margin: '0'
@@ -742,45 +783,62 @@ const styles = {
   removeProjectBtn: {
     display: 'flex',
     alignItems: 'center',
-    gap: '8px',
-    padding: '6px 12px',
+    gap: '6px',
+    padding: '8px 12px',
     color: '#DC2626',
     backgroundColor: 'transparent',
-    border: 'none',
+    border: '1px solid #DC2626',
     borderRadius: '6px',
     cursor: 'pointer',
-    fontSize: '14px',
-    transition: 'background-color 0.2s'
+    fontSize: '13px',
+    transition: 'all 0.2s',
+    whiteSpace: 'nowrap'
   },
   submitContainer: {
     display: 'flex',
-    justifyContent: 'center'
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginTop: '24px',
+    gap: '12px'
   },
   submitBtn: {
     display: 'flex',
     alignItems: 'center',
-    gap: '8px',
+    justifyContent: 'center',
+    gap: '10px',
     padding: '14px 32px',
     backgroundColor: '#4F46E5',
     color: '#ffffff',
     border: 'none',
     borderRadius: '8px',
-    fontSize: '18px',
+    fontSize: '16px',
     fontWeight: '600',
     cursor: 'pointer',
-    transition: 'background-color 0.2s'
+    transition: 'background-color 0.2s',
+    width: '100%',
+    maxWidth: '400px',
+    minHeight: '50px'
   },
   submitBtnDisabled: {
     backgroundColor: '#9CA3AF',
     cursor: 'not-allowed'
   },
+  warningText: {
+    fontSize: '13px',
+    color: '#DC2626',
+    textAlign: 'center',
+    margin: '0',
+    lineHeight: '1.5'
+  },
   icon: {
     width: '20px',
-    height: '20px'
+    height: '20px',
+    flexShrink: 0
   },
   iconSmall: {
-    width: '16px',
-    height: '16px'
+    width: '18px',
+    height: '18px',
+    flexShrink: 0
   },
   spinner: {
     border: '2px solid rgba(255, 255, 255, 0.3)',
@@ -791,5 +849,21 @@ const styles = {
     animation: 'spin 1s linear infinite'
   }
 };
+
+// Add keyframes for spinner animation
+const styleSheet = document.createElement('style');
+styleSheet.textContent = `
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  @media (max-width: 640px) {
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+  }
+`;
+document.head.appendChild(styleSheet);
 
 export default ProjectForm;
