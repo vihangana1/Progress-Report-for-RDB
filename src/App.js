@@ -1,7 +1,7 @@
-import ProjectForm from './ProjectForm';
+import Progress from './Progress';
 
 function App() {
-  return <ProjectForm />;
+  return <Progress />;
 }
 
 export default App;
