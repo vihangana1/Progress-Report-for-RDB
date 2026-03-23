@@ -168,8 +168,8 @@ export default function Progress() {
       <div style={styles.header}>
         <div style={styles.headerAccent} />
         <div style={styles.headerContent}>
-          <h1 style={styles.mainTitle}>ප්‍රගති වාර්තා ආකෘති පත්‍රය</h1>
-          <p style={styles.subtitle}>Progress Report Form</p>
+          <h1 style={styles.mainTitle}>මාසික ප්‍රගතිය වාර්තා කිරීම - ග්‍රාමීය සංවර්ධන කාර්‍යාංශය</h1>
+          <p style={styles.subtitle}> Monthly Progress Report - Rural Development Bureau</p>
         </div>
       </div>
 
