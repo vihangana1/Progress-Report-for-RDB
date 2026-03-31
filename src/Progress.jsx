@@ -69,7 +69,7 @@ const T = {
   en: {
     mainTitle: "Monthly Progress Report — Rural Development Bureau",
     subtitle: "මාසික ප්‍රගතිය වාර්තා කිරීම - ග්‍රාමීය සංවර්ධන කාර්යාංශය",
-    officerSection: "Officer Information",
+    officerSection: "Information of the officer entering the information",
     district: "District",
     districtPlaceholder: "-- Select District --",
     name: "Name",
