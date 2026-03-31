@@ -260,7 +260,7 @@ export default function Progress() {
 
           <div style={styles.noticeBar}>
             <span style={styles.noticeIcon}>📋</span>
-            <span>ඔබ ඇතුළු කළ තොරතුරු සමාලෝචනය කරන්න. නිවැරදි නම් <strong>"Google Sheets වෙත යොමු කරන්න"</strong> ක්ලික් කරන්න.</span>
+            <span>ඔබ ඇතුළු කළ තොරතුරු සමාලෝචනය කරන්න. නිවැරදි නම් <strong>"Submit"</strong> ක්ලික් කරන්න.</span>
           </div>
 
           {/* Officer */}
@@ -326,7 +326,7 @@ export default function Progress() {
             <button type="button" onClick={handleDownloadPDF}   style={styles.pdfBtn}>📄 PDF බාගන්න</button>
             <button type="button" onClick={handleSendToSheets} disabled={isSending}
               style={{ ...styles.sendBtn, opacity: isSending?0.7:1, cursor: isSending?"not-allowed":"pointer" }}>
-              {isSending ? "⏳ යොමු කරමින්..." : "📤 Google Sheets වෙත යොමු කරන්න"}
+              {isSending ? "⏳ යොමු කරමින්..." : "📤 Submit"}
             </button>
           </div>
         </div>
@@ -339,7 +339,7 @@ export default function Progress() {
     <div style={{ ...styles.container, ...sectionStyles }}>
       <Header />
       <form onSubmit={handleFormSubmit} style={styles.form}>
-        <SectionCard title="තොරතුරු ඇතුලත් කරනු ලබන නිලධාරියාගේ තොරතුරු">
+        <SectionCard title="තොරතුරු ඇතුළත් කරනු ලබන නිලධාරියාගේ තොරතුරු">
           <div style={styles.fieldRow}>
             <label style={styles.fieldLabel}>දිස්ත්‍රික්කය / District</label>
             <select name="district" value={formData.district} onChange={handleText} style={{ ...styles.fieldInput, cursor:"pointer" }}>
