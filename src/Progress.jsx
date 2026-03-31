@@ -33,13 +33,15 @@ const DISTRICTS = [
 ];
 
 /* ── Helpers ─────────────────────────────────────────── */
-function TextField({ label, name, value, onChange, placeholder = "ඇතුළත් කරන්න..." }) {
+function TextField({ label, name, value, onChange, placeholder = "ඇතුළත් කරන්න...", required = false }) {
   return (
     <div style={styles.fieldRow}>
       <label style={styles.fieldLabel}>{label}</label>
       <input type="text" name={name} value={value}
         onChange={(e) => onChange(name, e.target.value)}
-        placeholder={placeholder} style={styles.fieldInput} />
+        placeholder={placeholder} 
+        required={required}
+        style={styles.fieldInput} />
     </div>
   );
 }
@@ -109,8 +111,15 @@ export default function Progress() {
   const removeProject = (id) => { if (projects.length > 1) setProjects(p => p.filter(r => r.id !== id)); };
 
   /* Step 1: show summary */
-  const handleFormSubmit = (e) => { e.preventDefault(); setPage("summary"); window.scrollTo(0, 0); };
-
+  const handleFormSubmit = (e) => { 
+    e.preventDefault(); 
+    if (selectedSections.length === 0) {
+      alert("කරුණාකර අවම වශයෙන් එක් කොටසක් තෝරන්න. / Please select at least one section.");
+      return;
+    }
+    setPage("summary"); 
+    window.scrollTo(0, 0); 
+  };
   /* Step 2: send to Google Sheets */
   const handleSendToSheets = async () => {
     setIsSending(true);
@@ -342,16 +351,16 @@ export default function Progress() {
         <SectionCard title="තොරතුරු ඇතුළත් කරනු ලබන නිලධාරියාගේ තොරතුරු">
           <div style={styles.fieldRow}>
             <label style={styles.fieldLabel}>දිස්ත්‍රික්කය / District</label>
-            <select name="district" value={formData.district} onChange={handleText} style={{ ...styles.fieldInput, cursor:"pointer" }}>
+            <select name="district" value={formData.district} onChange={handleText} style={{ ...styles.fieldInput, cursor:"pointer" }} required>
               <option value="">-- දිස්ත්‍රික්කය තෝරන්න / Select District --</option>
               {DISTRICTS.map(([si,en]) => <option key={si} value={si}>{si} / {en}</option>)}
             </select>
           </div>
-          <TextField label="නම / Name" name="studentName" value={formData.studentName} onChange={handleChange} placeholder="නම ඇතුළත් කරන්න..." />
-          <TextField label="තනතුර / Position" name="position" value={formData.position} onChange={handleChange} placeholder="තනතුර ඇතුළත් කරන්න..." />
+          <TextField label="නම / Name" name="studentName" value={formData.studentName} onChange={handleChange} placeholder="නම ඇතුළත් කරන්න..." required />
+          <TextField label="තනතුර / Position" name="position" value={formData.position} onChange={handleChange} placeholder="තනතුර ඇතුළත් කරන්න..." required />
           <div style={styles.fieldRow}>
             <label style={styles.fieldLabel}>දිනය / Date</label>
-            <input type="date" name="date" value={formData.date} onChange={handleText} style={styles.fieldInput} />
+            <input type="date" name="date" value={formData.date} onChange={handleText} style={styles.fieldInput} required  />
           </div>
           <div style={styles.selectorBox}>
             <div style={styles.selectorHeader}>
