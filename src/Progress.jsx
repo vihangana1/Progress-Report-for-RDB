@@ -188,7 +188,7 @@ export default function Progress() {
   //   }
   //   if (selectedSections.includes("s4")) {
   //     XLSX.utils.book_append_sheet(wb, mkSheet(
-  //       ["අංකය", "දිස්ත්‍රික්කය", "ප්‍රාදේශීය ලේකම්", "ග්‍රාම නිලධාරී", "ව්‍යාපෘතිය", "අනුමත (රු.)", "සත්‍යය (රු.)", "පරිපාලන (රු.)", "මූල්‍ය (රු.)", "භෞතික"],
+  //       ["අංකය", "දිස්ත්‍රික්කය", "ප්‍රාදේශීය ලේකම් කාර්යාලය", "ග්‍රාම නිලධාරී වසම", "ව්‍යාපෘතියේ නම", "අනුමත (රු.)", "සත්‍යය (රු.)", "පරිපාලන (රු.)", "මූල්‍ය (රු.)", "භෞතික"],
   //       projects.map((p, i) => [i+1, formData.district, p.pradeshiya, p.grama, p.name, p.approved||"", p.actual||"", p.admin||"", p.financial||"", p.physical])
   //     ), "4-ව්‍යාපෘති");
   //   }
@@ -298,7 +298,7 @@ export default function Progress() {
               <div style={styles.summaryTableWrap}>
                 <table style={styles.summaryTable}>
                   <thead>
-                    <tr>{["#","ප්‍රාදේශීය ලේකම්","ග්‍රාම නිලධාරී","ව්‍යාපෘතිය","අනුමත (රු.)","සත්‍යය (රු.)","පරිපාලන (රු.)","මූල්‍ය (රු.)","භෞතික"].map(h=><th key={h} style={styles.sTh}>{h}</th>)}</tr>
+                    <tr>{["#","ප්‍රාදේශීය ලේකම් කාර්යාලය","ග්‍රාම නිලධාරී වසම","ව්‍යාපෘතියේ නම","අනුමත ප්‍රතිපාදන මුදල (රු.)","ව්‍යාපෘතියේ සත්‍යය වියදම","පරිපාලන වියදම (රු.)","මූල්‍ය ප්‍රගතිය (රු.)","භෞතික ප්‍රගතිය"].map(h=><th key={h} style={styles.sTh}>{h}</th>)}</tr>
                   </thead>
                   <tbody>
                     {projects.map((p,i)=>(
@@ -538,7 +538,7 @@ function buildPrintHTML(formData, selectedSections, projects) {
     <div style="overflow-x:auto;">
     <table style="width:100%;border-collapse:collapse;font-size:12px;">
       <thead><tr style="background:linear-gradient(135deg,#1a3a6e,#2d5aa0);color:#fff;">
-        ${["#","ප්‍රාදේශීය ලේකම්","ග්‍රාම නිලධාරී","ව්‍යාපෘතිය","අනුමත (රු.)","සත්‍යය (රු.)","පරිපාලන (රු.)","මූල්‍ය (රු.)","භෞතික"].map(h=>`<th style="padding:9px 8px;border:1px solid rgba(255,255,255,0.2);text-align:center;font-size:11px;">${h}</th>`).join("")}
+        ${["#","ප්‍රාදේශීය ලේකම් කාර්යාලය","ග්‍රාම නිලධාරී වසම","ව්‍යාපෘතියේ නම","අනුමත ප්‍රතිපාදන මුදල (රු.)","ව්‍යාපෘතියේ සත්‍යය වියදම","පරිපාලන වියදම (රු.)","මූල්‍ය ප්‍රගතිය (රු.)","භෞතික ප්‍රගතිය"].map(h=>`<th style="padding:9px 8px;border:1px solid rgba(255,255,255,0.2);text-align:center;font-size:11px;">${h}</th>`).join("")}
       </tr></thead>
       <tbody>${projRows}</tbody>
     </table></div></div>`;
