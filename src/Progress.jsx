@@ -745,8 +745,8 @@ const T = {
 const GOOGLE_SCRIPT_URLS = {
   s1: "https://script.google.com/macros/s/AKfycbxxo8eWJZSLfM0oh70-Lnz_fTPfA13Aw6LjGuy0UjWN1sg6aCiMS_2dUFuOvSKu9y-Y7g/exec",
   s2: "https://script.google.com/macros/s/AKfycbyEgKo9QX6Ml9i10plWUViFokxOK_wrMkYjmi1xPU1BdLvLP2Cr1OMmB-XV0J2-155iyQ/exec",
-  s3: "https://script.google.com/macros/s/AKfycbyWkcEVQFZ6eW393ae28z3Ap60UJrqKy6lKX60M085ct8LQ8qXwHmJX2C0U8FgLvpbhVg/exec",
-  s4: "https://script.google.com/macros/s/AKfycbzSuhBt5PDr7beNyIYa_2fAzKen3y5pLHZwk4RnGBFbvWickqlEzy4CK-wW8z2b2L_mgA/exec",
+  s3: "https://script.google.com/macros/s/AKfycbzOrhXk2KfHBkJcxB2z5XYPuuH3erV4o1lhvelIcqp9KGa31mQIJJPUEn9EpjsbA0Cy/exec",
+  s4: "https://script.google.com/macros/s/AKfycbyIwQlaTI7F2viABAVDBVcmuLyzMQB1ZR2RnV1jBD6GZ1gBY6tNtM5wKf5wRh60jzaJpQ/exec",
 
 };
 
@@ -841,9 +841,10 @@ export default function Progress() {
 
   const [formData, setFormData] = useState({
     district: "", studentName: "", position: "", date: "",
-    s1_approved: "", s1_financial: "", s1_programs: "", s1_officers: "",
-    s2_approved: "", s2_financial: "", s2_programs: "", s2_officers: "",
-    s3_approved: "", s3_financial: "", s3_councils: "",
+    s1_approved: "", s1_financial: "", s1_bills: "", s1_programs: "", s1_officers: "",
+    s2_approved: "", s2_financial: "", s2_bills: "", s2_programs: "", s2_officers: "",
+    s3_approved: "", s3_financial: "", s3_bills: "", s3_councils: "",
+    s5_bills: "",
   });
   const [selectedSections, setSelectedSections] = useState([]);
   const [projects, setProjects] = useState([emptyProject()]);
@@ -905,7 +906,7 @@ export default function Progress() {
 
   const handleReset = () => {
     setPage("form"); setSelectedSections([]); setSendStatus({}); setIsSending(false);
-    setFormData({ district:"", studentName:"", position:"", date:"", s1_approved:"", s1_financial:"", s1_programs:"", s1_officers:"", s2_approved:"", s2_financial:"", s2_programs:"", s2_officers:"", s3_approved:"", s3_financial:"", s3_councils:"" });
+    setFormData({ district:"", studentName:"", position:"", date:"", s1_approved:"", s1_financial:"", s1_bills:"", s1_programs:"", s1_officers:"", s2_approved:"", s2_financial:"", s2_bills:"", s2_programs:"", s2_officers:"", s3_approved:"", s3_financial:"", s3_bills:"", s3_councils:"", s5_bills:"" });
     setProjects([emptyProject()]); window.scrollTo(0, 0);
   };
 
@@ -969,23 +970,26 @@ export default function Progress() {
             <SectionCard number="1" title={t.s1Label}>
               <SummaryRow label={`① ${t.approved}`} value={formData.s1_approved} />
               <SummaryRow label={`② ${t.financial}`} value={formData.s1_financial} />
-              <SummaryRow label={`③ ${t.programs}`} value={formData.s1_programs} />
-              <SummaryRow label={`④ ${t.officers}`} value={formData.s1_officers} />
+              <SummaryRow label={`③ ${t.bills}`} value={formData.s1_bills} />
+              <SummaryRow label={`④ ${t.programs}`} value={formData.s1_programs} />
+              <SummaryRow label={`⑤ ${t.officers}`} value={formData.s1_officers} />
             </SectionCard>
           )}
           {selectedSections.includes("s2") && (
             <SectionCard number="2" title={t.s2Label}>
               <SummaryRow label={`① ${t.approved}`} value={formData.s2_approved} />
               <SummaryRow label={`② ${t.financial}`} value={formData.s2_financial} />
-              <SummaryRow label={`③ ${t.programs}`} value={formData.s2_programs} />
-              <SummaryRow label={`④ ${t.officers}`} value={formData.s2_officers} />
+              <SummaryRow label={`③ ${t.bills}`} value={formData.s2_bills} />
+              <SummaryRow label={`④ ${t.programs}`} value={formData.s2_programs} />
+              <SummaryRow label={`⑤ ${t.officers}`} value={formData.s2_officers} />
             </SectionCard>
           )}
           {selectedSections.includes("s3") && (
             <SectionCard number="3" title={t.s3Label}>
               <SummaryRow label={`① ${t.approved}`} value={formData.s3_approved} />
               <SummaryRow label={`② ${t.financial}`} value={formData.s3_financial} />
-              <SummaryRow label={`③ ${t.councils}`} value={formData.s3_councils} />
+              <SummaryRow label={`③ ${t.bills}`} value={formData.s3_bills} />
+              <SummaryRow label={`④ ${t.councils}`} value={formData.s3_councils} />
             </SectionCard>
           )}
 
@@ -994,7 +998,7 @@ export default function Progress() {
               <div style={styles.summaryTableWrap}>
                 <table style={styles.summaryTable}>
                   <thead>
-                    <tr>{[t.noCol,t.divSec,t.gnDiv,t.projName,t.approvedAmt,t.actualCost,t.adminCost,t.financialProg,t.physicalProg,t.bills].map(h=><th key={h} style={styles.sTh}>{h}</th>)}</tr>
+                    <tr>{[t.noCol,t.divSec,t.gnDiv,t.projName,t.approvedAmt,t.actualCost,t.adminCost,t.financialProg,t.bills,t.physicalProg].map(h=><th key={h} style={styles.sTh}>{h}</th>)}</tr>
                   </thead>
                   <tbody>
                     {projects.map((p,i)=>(
@@ -1092,23 +1096,26 @@ export default function Progress() {
           <SectionCard number="1" title={t.s1Label}>
             <TextField label={`① ${t.approved}`} name="s1_approved" value={formData.s1_approved} onChange={handleChange} placeholder={t.approvedPlaceholder} type="number" />
             <TextField label={`② ${t.financial}`} name="s1_financial" value={formData.s1_financial} onChange={handleChange} placeholder={t.financialPlaceholder} type="number" />
-            <TextField label={`③ ${t.programs}`} name="s1_programs" value={formData.s1_programs} onChange={handleChange} placeholder={t.programsPlaceholder} type="number" />
-            <TextField label={`④ ${t.officers}`} name="s1_officers" value={formData.s1_officers} onChange={handleChange} placeholder={t.officersPlaceholder} type="number" />
+            <TextField label={`③ ${t.bills}`} name="s1_bills" value={formData.s1_bills} onChange={handleChange} placeholder={t.billsPlaceholder} type="number" />
+            <TextField label={`④ ${t.programs}`} name="s1_programs" value={formData.s1_programs} onChange={handleChange} placeholder={t.programsPlaceholder} type="number" />
+            <TextField label={`⑤ ${t.officers}`} name="s1_officers" value={formData.s1_officers} onChange={handleChange} placeholder={t.officersPlaceholder} type="number" />
           </SectionCard>
         )}
         {selectedSections.includes("s2") && (
           <SectionCard number="2" title={t.s2Label}>
             <TextField label={`① ${t.approved}`} name="s2_approved" value={formData.s2_approved} onChange={handleChange} placeholder={t.approvedPlaceholder} type="number" />
             <TextField label={`② ${t.financial}`} name="s2_financial" value={formData.s2_financial} onChange={handleChange} placeholder={t.financialPlaceholder} type="number" />
-            <TextField label={`③ ${t.programs}`} name="s2_programs" value={formData.s2_programs} onChange={handleChange} placeholder={t.programsPlaceholder} type="number" />
-            <TextField label={`④ ${t.officers}`} name="s2_officers" value={formData.s2_officers} onChange={handleChange} placeholder={t.officersPlaceholder} type="number" />
+            <TextField label={`③ ${t.bills}`} name="s2_bills" value={formData.s2_bills} onChange={handleChange} placeholder={t.billsPlaceholder} type="number" />
+            <TextField label={`④ ${t.programs}`} name="s2_programs" value={formData.s2_programs} onChange={handleChange} placeholder={t.programsPlaceholder} type="number" />
+            <TextField label={`⑤ ${t.officers}`} name="s2_officers" value={formData.s2_officers} onChange={handleChange} placeholder={t.officersPlaceholder} type="number" />
           </SectionCard>
         )}
         {selectedSections.includes("s3") && (
           <SectionCard number="3" title={t.s3Label}>
             <TextField label={`① ${t.approved}`} name="s3_approved" value={formData.s3_approved} onChange={handleChange} placeholder={t.approvedPlaceholder} type="number" />
             <TextField label={`② ${t.financial}`} name="s3_financial" value={formData.s3_financial} onChange={handleChange} placeholder={t.financialPlaceholder} type="number" />
-            <TextField label={`③ ${t.councils}`} name="s3_councils" value={formData.s3_councils} onChange={handleChange} placeholder={t.councilsPlaceholder} type="number" />
+            <TextField label={`③ ${t.bills}`} name="s3_bills" value={formData.s3_bills} onChange={handleChange} placeholder={t.billsPlaceholder} type="number" />
+            <TextField label={`④ ${t.councils}`} name="s3_councils" value={formData.s3_councils} onChange={handleChange} placeholder={t.councilsPlaceholder} type="number" />
           </SectionCard>
         )}
 
@@ -1119,8 +1126,8 @@ export default function Progress() {
                 <colgroup>
                   <col style={{width:"4%"}}/><col style={{width:"12%"}}/><col style={{width:"10%"}}/>
                   <col style={{width:"12%"}}/><col style={{width:"10%"}}/><col style={{width:"10%"}}/>
-                  <col style={{width:"9%"}}/><col style={{width:"10%"}}/><col style={{width:"9%"}}/>
-                  <col style={{width:"10%"}}/><col style={{width:"4%"}}/>
+                  <col style={{width:"9%"}}/><col style={{width:"10%"}}/><col style={{width:"10%"}}/>
+                  <col style={{width:"9%"}}/><col style={{width:"4%"}}/>
                 </colgroup>
                 <thead>
                   <tr>
@@ -1132,8 +1139,8 @@ export default function Progress() {
                     <th style={styles.th}>{t.actualCost}</th>
                     <th style={styles.th}>{t.adminCost}</th>
                     <th style={styles.th}>{t.financialProg}<br/><span style={styles.thEn}>= {t.actualCost} + {t.adminCost}</span></th>
-                    <th style={styles.th}>{t.physicalProg}</th>
                     <th style={styles.th}>{t.bills}</th>
+                    <th style={styles.th}>{t.physicalProg}</th>
                     <th style={{...styles.th,background:"#c53030"}}>{t.deleteCol}</th>
                   </tr>
                 </thead>
@@ -1147,14 +1154,15 @@ export default function Progress() {
                       <td style={styles.td}><input style={styles.tableInput} type="number" min="0" step="any" value={proj.approved} onChange={e=>handleProjectChange(proj.id,"approved",e.target.value)} placeholder="0"/></td>
                       <td style={styles.td}><input style={styles.tableInput} type="number" min="0" step="any" value={proj.actual} onChange={e=>{const v=e.target.value;const f=(parseFloat(v)||0)+(parseFloat(proj.admin)||0);handleProjectChange(proj.id,"actual",v);handleProjectChange(proj.id,"financial",f||"");}} placeholder="0"/></td>
                       <td style={styles.td}><input style={styles.tableInput} type="number" min="0" step="any" value={proj.admin} onChange={e=>{const v=e.target.value;const f=(parseFloat(proj.actual)||0)+(parseFloat(v)||0);handleProjectChange(proj.id,"admin",v);handleProjectChange(proj.id,"financial",f||"");}} placeholder="0"/></td>
+                      
                       <td style={{...styles.td,background:"#eff6ff"}}>
                         <div style={styles.calcCell}>
                           <span style={styles.calcValue}>{proj.financial?`රු.${Number(proj.financial).toLocaleString()}`:"—"}</span>
                           <span style={styles.calcNote}>{t.autoCalc}</span>
                         </div>
                       </td>
-                      <td style={styles.td}><input style={styles.tableInput} value={proj.physical} onChange={e=>handleProjectChange(proj.id,"physical",e.target.value)} placeholder={t.enter}/></td>
                       <td style={styles.td}><input style={styles.tableInput} type="number" min="0" step="any" value={proj.bills} onChange={e=>handleProjectChange(proj.id,"bills",e.target.value)} placeholder="0"/></td>
+                      <td style={styles.td}><input style={styles.tableInput} value={proj.physical} onChange={e=>handleProjectChange(proj.id,"physical",e.target.value)} placeholder={t.enter}/></td>
                       <td style={styles.tdCenter}><button type="button" onClick={()=>removeProject(proj.id)} style={styles.deleteBtn} disabled={projects.length===1}>✕</button></td>
                     </tr>
                   ))}
@@ -1213,11 +1221,11 @@ function buildPrintHTML(formData, selectedSections, projects, t, lang) {
   </table></div>`;
 
   if (selectedSections.includes("s1")) body += `${sHead("1",t.s1Label)}<table style="width:100%;border-collapse:collapse;">
-    ${row(`① ${t.approved}`,formData.s1_approved)}${row(`② ${t.financial}`,formData.s1_financial)}${row(`③ ${t.programs}`,formData.s1_programs)}${row(`④ ${t.officers}`,formData.s1_officers)}</table></div>`;
+    ${row(`① ${t.approved}`,formData.s1_approved)}${row(`② ${t.financial}`,formData.s1_financial)}${row(`③ ${t.bills}`,formData.s1_bills)}${row(`④ ${t.programs}`,formData.s1_programs)}${row(`⑤ ${t.officers}`,formData.s1_officers)}</table></div>`;
   if (selectedSections.includes("s2")) body += `${sHead("2",t.s2Label)}<table style="width:100%;border-collapse:collapse;">
-    ${row(`① ${t.approved}`,formData.s2_approved)}${row(`② ${t.financial}`,formData.s2_financial)}${row(`③ ${t.programs}`,formData.s2_programs)}${row(`④ ${t.officers}`,formData.s2_officers)}</table></div>`;
+    ${row(`① ${t.approved}`,formData.s2_approved)}${row(`② ${t.financial}`,formData.s2_financial)}${row(`③ ${t.bills}`,formData.s2_bills)}${row(`④ ${t.programs}`,formData.s2_programs)}${row(`⑤ ${t.officers}`,formData.s2_officers)}</table></div>`;
   if (selectedSections.includes("s3")) body += `${sHead("3",t.s3Label)}<table style="width:100%;border-collapse:collapse;">
-    ${row(`① ${t.approved}`,formData.s3_approved)}${row(`② ${t.financial}`,formData.s3_financial)}${row(`③ ${t.councils}`,formData.s3_councils)}</table></div>`;
+    ${row(`① ${t.approved}`,formData.s3_approved)}${row(`② ${t.financial}`,formData.s3_financial)}${row(`③ ${t.bills}`,formData.s3_bills)}${row(`④ ${t.councils}`,formData.s3_councils)}</table></div>`;
 
   if (selectedSections.includes("s4")) {
     const projRows = projects.map((p,i)=>`<tr style="background:${i%2===0?"#f7fafc":"#fff"}">
@@ -1229,13 +1237,13 @@ function buildPrintHTML(formData, selectedSections, projects, t, lang) {
       <td style="padding:4px 5px;border:1px solid #e2e8f0;text-align:right;font-size:10px;">${p.actual?`රු.${Number(p.actual).toLocaleString()}`:"—"}</td>
       <td style="padding:4px 5px;border:1px solid #e2e8f0;text-align:right;font-size:10px;">${p.admin?`රු.${Number(p.admin).toLocaleString()}`:"—"}</td>
       <td style="padding:4px 5px;border:1px solid #e2e8f0;text-align:right;font-weight:700;color:#000;font-size:10px;">${p.financial?`රු.${Number(p.financial).toLocaleString()}`:"—"}</td>
-      <td style="padding:4px 5px;border:1px solid #e2e8f0;font-size:10px;">${p.physical||"—"}</td>
       <td style="padding:4px 5px;border:1px solid #e2e8f0;text-align:right;font-size:10px;">${p.bills?`රු.${Number(p.bills).toLocaleString()}`:"—"}</td>
+      <td style="padding:4px 5px;border:1px solid #e2e8f0;font-size:10px;">${p.physical||"—"}</td>
     </tr>`).join("");
     body += `${sHead("4",t.s4Label)}<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:10px;table-layout:fixed;">
       <colgroup><col style="width:4%"/><col style="width:12%"/><col style="width:10%"/><col style="width:12%"/><col style="width:10%"/><col style="width:10%"/><col style="width:10%"/><col style="width:10%"/><col style="width:10%"/><col style="width:12%"/></colgroup>
       <thead><tr style="background:linear-gradient(135deg,#6b1a1a,#c47a2a);color:#fff;">
-        ${[t.noCol,t.divSec,t.gnDiv,t.projName,t.approvedAmt,t.actualCost,t.adminCost,t.financialProg,t.physicalProg,t.bills].map(h=>`<th style="padding:6px 4px;border:1px solid rgba(255,255,255,0.2);text-align:center;font-size:9px;word-break:break-word;">${h}</th>`).join("")}
+        ${[t.noCol,t.divSec,t.gnDiv,t.projName,t.approvedAmt,t.actualCost,t.adminCost,t.financialProg,t.bills,t.physicalProg].map(h=>`<th style="padding:6px 4px;border:1px solid rgba(255,255,255,0.2);text-align:center;font-size:9px;word-break:break-word;">${h}</th>`).join("")}
       </tr></thead><tbody>${projRows}</tbody></table></div></div>`;
   }
 
