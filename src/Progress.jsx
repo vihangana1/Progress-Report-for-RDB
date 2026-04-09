@@ -743,10 +743,10 @@ const T = {
 //const SECTION_KEYS = ["s1","s2","s3","s4"];
 
 const GOOGLE_SCRIPT_URLS = {
-  s1: "https://script.google.com/macros/s/AKfycbxxo8eWJZSLfM0oh70-Lnz_fTPfA13Aw6LjGuy0UjWN1sg6aCiMS_2dUFuOvSKu9y-Y7g/exec",
-  s2: "https://script.google.com/macros/s/AKfycbyEgKo9QX6Ml9i10plWUViFokxOK_wrMkYjmi1xPU1BdLvLP2Cr1OMmB-XV0J2-155iyQ/exec",
-  s3: "https://script.google.com/macros/s/AKfycbzOrhXk2KfHBkJcxB2z5XYPuuH3erV4o1lhvelIcqp9KGa31mQIJJPUEn9EpjsbA0Cy/exec",
-  s4: "https://script.google.com/macros/s/AKfycbyIwQlaTI7F2viABAVDBVcmuLyzMQB1ZR2RnV1jBD6GZ1gBY6tNtM5wKf5wRh60jzaJpQ/exec",
+  s1: "https://script.google.com/macros/s/AKfycbwVqn05wMXH12htLf_aF7FKxuH5V0eZCoMXcuwOpptMrNWUcYQw2eBmRRD0UWuZbN2x/exec",
+  s2: "https://script.google.com/macros/s/AKfycbyvDWhYUuWvucV5lbgwPEV8RGPgJXAhvNID4fXB5zfdGimw3SSpDmnI4MpCizmt0wFd/exec",
+  s3: "https://script.google.com/macros/s/AKfycbwaY8Fy-u-TnPacUQKvOjYveCZM3CcVXZ7mCGvLEHY4SmiYwHnufsnjDOb1vADhPpiV/exec",
+  s4: "https://script.google.com/macros/s/AKfycbwSkYxZFH_jwNKI75nbLQB12aQzshSop5jb7gJced6NVU49rpJZu1UaUJPF_QpH_Set/exec",
 
 };
 
@@ -872,9 +872,9 @@ export default function Progress() {
     const districtDisplay = formData.district ? formData.district.split('|')[0] : '';
     const officer = { district: districtDisplay, name: formData.studentName, position: formData.position, date: formData.date };
     const jobs = [];
-    if (selectedSections.includes("s1")) jobs.push({ key: "s1", payload: { ...officer, approved: formData.s1_approved, financial: formData.s1_financial, programs: formData.s1_programs, officers: formData.s1_officers } });
-    if (selectedSections.includes("s2")) jobs.push({ key: "s2", payload: { ...officer, approved: formData.s2_approved, financial: formData.s2_financial, programs: formData.s2_programs, officers: formData.s2_officers } });
-    if (selectedSections.includes("s3")) jobs.push({ key: "s3", payload: { ...officer, approved: formData.s3_approved, financial: formData.s3_financial, councils: formData.s3_councils } });
+    if (selectedSections.includes("s1")) jobs.push({ key: "s1", payload: { ...officer, approved: formData.s1_approved, financial: formData.s1_financial, bills: formData.s1_bills, programs: formData.s1_programs, officers: formData.s1_officers } });
+    if (selectedSections.includes("s2")) jobs.push({ key: "s2", payload: { ...officer, approved: formData.s2_approved, financial: formData.s2_financial, bills: formData.s2_bills, programs: formData.s2_programs, officers: formData.s2_officers } });
+    if (selectedSections.includes("s3")) jobs.push({ key: "s3", payload: { ...officer, approved: formData.s3_approved, financial: formData.s3_financial, bills: formData.s3_bills, councils: formData.s3_councils } });
     if (selectedSections.includes("s4")) jobs.push({ key: "s4", payload: { ...officer, projects: projects.map((p, i) => ({ no: i+1, pradeshiya: p.pradeshiya, grama: p.grama, name: p.name, approved: p.approved, actual: p.actual, admin: p.admin, financial: p.financial, physical: p.physical, bills: p.bills })) } });
 
     await Promise.all(jobs.map(async ({ key, payload }) => {
@@ -1011,8 +1011,8 @@ export default function Progress() {
                         <td style={styles.sTd}>{p.actual?`රු.${Number(p.actual).toLocaleString()}`:"—"}</td>
                         <td style={styles.sTd}>{p.admin?`රු.${Number(p.admin).toLocaleString()}`:"—"}</td>
                         <td style={{...styles.sTd,fontWeight:700,color:"#6b1a1a"}}>{p.financial?`රු.${Number(p.financial).toLocaleString()}`:"—"}</td>
-                        <td style={styles.sTd}>{p.physical||"—"}</td>
                         <td style={styles.sTd}>{p.bills?`රු.${Number(p.bills).toLocaleString()}`:"—"}</td>
+                        <td style={styles.sTd}>{p.physical||"—"}</td>
                       </tr>
                     ))}
                   </tbody>
